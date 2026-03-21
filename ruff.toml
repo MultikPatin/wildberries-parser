@@ -1,0 +1,71 @@
+line-length = 80
+src = ["src"]
+
+[lint]
+select = [
+    'A',
+    'ANN',
+    'B',
+    'C4',
+    'E',
+    'W',
+    'F',
+    'I',
+    'LOG',
+    'PTH',
+    'N',
+    'PERF',
+    'PIE',
+    'PL',
+    'PT',
+    'RET',
+    'RUF',
+    'S',
+    'SIM',
+    'T20',
+    'TID',
+    'TRY',
+    'UP'
+]
+ignore = [
+    "RUF001",
+    "RUF003",
+    "RUF002",
+    "RUF015",
+]
+
+[lint.isort]
+known-first-party = ["src"]
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder"
+]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[lint.per-file-ignores]
+"tests/**/*.py" = [
+    "ANN",
+    "S",
+    "F811"
+]
+"scripts/**/*.py" = [
+    "T20"
+]
+"**/migrations/*.py" = [
+    "F811",
+    "F401"
+]
+"**/generated/*.py" = [
+    "F811",
+    "E501"
+]
+
+[lint.pydocstyle]
+convention = "google"

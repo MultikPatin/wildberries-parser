@@ -1,0 +1,71 @@
+repos:
+
+  # General checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-added-large-files
+        args: [ '--maxkb=512' ]
+        description: "Prevent committing large files (>512KB)"
+
+      - id: check-case-conflict
+        description: "Check for files that would conflict on case-insensitive filesystems"
+
+      - id: check-json
+        description: "Check JSON files for valid syntax"
+        exclude: |
+          (?x)^(
+            .*\.min\.json|      # мистифицированные JSON
+            .*test.*\.json|     # тестовые файлы
+            .*fixture.*\.json   # фикстуры
+          )$
+
+      - id: check-symlinks
+        description: "Check for broken symlinks"
+
+      - id: check-toml
+        description: "Check TOML files for valid syntax"
+
+      - id: check-yaml
+        args: [ '--unsafe' ]
+        exclude: "^deployment/helm/.*"
+        description: "Check YAML files for valid syntax (allow anchors)"
+
+      - id: check-xml
+        description: "Check XML files for valid syntax"
+
+      - id: detect-private-key
+        description: "Detect private keys in committed files"
+
+      - id: name-tests-test
+        description: "Ensure test files are named correctly"
+
+  # Checking dependencies
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    # uv version.
+    rev: 0.10.7
+    hooks:
+      - id: uv-lock
+
+    # Ruff checks & formatting
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # ruff version.
+    rev: v0.15.4
+    hooks:
+      - id: ruff-check
+        args: [ --fix ]
+        types_or: [ python, pyi ]
+        description: "Lint Python files and auto-fix what's possible"
+
+      - id: ruff-format
+        types_or: [ python, pyi ]
+        description: "Format Python files"
+
+  - repo: local
+    hooks:
+      - id: ty
+        name: ty check
+        entry: ty check .
+        language: system
+        pass_filenames: false
+        always_run: true
