@@ -2,19 +2,19 @@ import re
 from typing import Any
 
 from bs4 import BeautifulSoup
-from icecream import ic
 
 from src.constants import (
     PRODUCT_ARTICLE_CLASS,
+    PRODUCT_PRICE_CLASS,
     PRODUCT_RATING_CLASS,
     PRODUCT_RATING_PATTERN,
     PRODUCT_REVIEWS_PATTERN,
+    PRODUCT_TITLE_CLASS,
 )
 
-# • Ссылка на товар!
 # • ! Артикул
-# • Название!
-# • Цена!
+# • ! Название
+# • ! Цена
 # • Описание
 # • Ссылки на изображения через запятую
 # • Все характеристики с сохранением их структуры
@@ -30,17 +30,34 @@ def parse_product_card(content: str) -> dict[str, Any]:
     soup = BeautifulSoup(content, features="lxml")
     spec = {}
 
-    # RATING
-    r_spec = parse_rating_reviews(soup)
-    if r_spec:
-        spec.update(r_spec)
+    _spec = parse_rating_reviews(soup)
+    if _spec:
+        spec.update(_spec)
 
-    a_spec = parse_article(soup)
-    if a_spec:
-        spec.update(a_spec)
+    _spec = parse_article(soup)
+    if _spec:
+        spec.update(_spec)
 
-    ic(spec)
+    _spec = parse_title(soup)
+    if _spec:
+        spec.update(_spec)
+
+    _spec = parse_price(soup)
+    if _spec:
+        spec.update(_spec)
+
     return spec
+
+
+def parse_price(soup: BeautifulSoup) -> dict[str, Any] | None:
+    spec = soup.find("ins", class_=PRODUCT_PRICE_CLASS)
+
+    if not (hasattr(spec, "text") and isinstance(spec.text, str)):
+        return None
+
+    text = spec.text.strip()
+    cleaned = re.sub(r"\D", "", text)
+    return {"price": int(cleaned)}
 
 
 def parse_article(soup: BeautifulSoup) -> dict[str, Any] | None:
@@ -49,6 +66,14 @@ def parse_article(soup: BeautifulSoup) -> dict[str, Any] | None:
         return None
 
     return {"article": spec.text}
+
+
+def parse_title(soup: BeautifulSoup) -> dict[str, Any] | None:
+    spec = soup.find("h2", class_=PRODUCT_TITLE_CLASS)
+    if not spec:
+        return None
+
+    return {"title": spec.text}
 
 
 def parse_rating_reviews(soup: BeautifulSoup) -> dict[str, Any] | None:

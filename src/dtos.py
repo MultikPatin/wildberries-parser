@@ -21,6 +21,7 @@ class Product:
     link: str
     article: str
     title: str
+    price: int
     description: str
     image_url: str
     spec: str
