@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup, Tag
 from src.constants import PRODUCT_CARD_CLASS, PRODUCT_CARD_LINK_CLASS
 
 
-def extract_product_links(content: str) -> list[str]:
+def parse_product_links(content: str) -> list[str]:
     soup = BeautifulSoup(content, features="lxml")
 
     product_links = []

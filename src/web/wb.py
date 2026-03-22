@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
 from src.constants import (
-    PRODUCT_CARD_SIZES,
+    PRODUCT_SIZES_CLASS,
     PRODUCTS_LIST_CLASS,
     SEARCH_FIELD_ID,
     WB_API_URL,
@@ -45,6 +45,6 @@ class WildberriesWebDriver:
         self._driver.get(url)
 
         self._wait.until(
-            ec.presence_of_element_located((By.CLASS_NAME, PRODUCT_CARD_SIZES))
+            ec.presence_of_element_located((By.CLASS_NAME, PRODUCT_SIZES_CLASS))
         )
         return self._driver.page_source

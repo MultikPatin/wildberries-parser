@@ -28,5 +28,5 @@ class Product:
     seller_link: str
     sizes: list[str]
     balance: int
-    rating: int
-    number_of_reviews: int
+    rating: float | None = None
+    reviews_count: int | None = None
