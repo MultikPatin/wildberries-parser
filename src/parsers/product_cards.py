@@ -9,6 +9,7 @@ from src.constants import (
     PRODUCT_RATING_CLASS,
     PRODUCT_RATING_PATTERN,
     PRODUCT_REVIEWS_PATTERN,
+    PRODUCT_SELLER_CLASS,
     PRODUCT_TITLE_CLASS,
 )
 
@@ -46,6 +47,10 @@ def parse_product_card(content: str) -> dict[str, Any]:
     if _spec:
         spec.update(_spec)
 
+    _spec = parse_seller_name(soup)
+    if _spec:
+        spec.update(_spec)
+
     return spec
 
 
@@ -58,6 +63,14 @@ def parse_price(soup: BeautifulSoup) -> dict[str, Any] | None:
     text = spec.text.strip()
     cleaned = re.sub(r"\D", "", text)
     return {"price": int(cleaned)}
+
+
+def parse_seller_name(soup: BeautifulSoup) -> dict[str, Any] | None:
+    spec = soup.find("span", class_=PRODUCT_SELLER_CLASS)
+    if not spec:
+        return None
+
+    return {"seller_name": spec.text}
 
 
 def parse_article(soup: BeautifulSoup) -> dict[str, Any] | None:
