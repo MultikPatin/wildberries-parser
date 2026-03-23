@@ -15,11 +15,17 @@ def main() -> None:
         links = parsers.parse_product_links(content)
 
     for link in links:
-        content = web_driver.get_product_card_html(link)
-        if content["page_content"]:
-            page_content = parsers.parse_product_card(content["page_content"])
+        params = {}
 
-        ic(page_content)
+        content = web_driver.get_product_card_html(link)
+        if content["content"]:
+            page_content = parsers.parse_product_card(content["content"])
+            params.update(page_content)
+        if content["detail"]:
+            page_detail = parsers.parse_product_detail(content["detail"])
+            params.update(page_detail)
+
+        ic(params)
 
     web_driver.quit()
 

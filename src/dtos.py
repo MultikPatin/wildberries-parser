@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Any
 
 # Список нужных данных:
 # • Ссылка на товар
@@ -22,9 +23,11 @@ class Product:
     article: str
     title: str
     price: int
+
     description: str
-    image_url: str
-    spec: str
+    specification: dict[str, Any]
+
+    image_urls: str
     seller_name: str
     seller_link: str
     sizes: list[str]

@@ -5,24 +5,25 @@ from bs4 import BeautifulSoup
 
 from src.constants import (
     PRODUCT_ARTICLE_CLASS,
+    PRODUCT_IMAGES_CLASS,
     PRODUCT_PRICE_CLASS,
     PRODUCT_RATING_CLASS,
     PRODUCT_RATING_PATTERN,
     PRODUCT_REVIEWS_PATTERN,
     PRODUCT_SELLER_CLASS,
+    PRODUCT_SELLER_NAME_CLASS,
     PRODUCT_TITLE_CLASS,
+    WB_API_URL,
 )
 
 # • ! Артикул
 # • ! Название
 # • ! Цена
-# • Описание
-# • Ссылки на изображения через запятую
-# • Все характеристики с сохранением их структуры
+# • ! Ссылки на изображения через запятую
 # • ! Название селлера
-# • Ссылка на селлера
-# • Размеры товара через запятую
-# • Остатки по товару (число)
+# • ! Ссылка на селлера
+# • Размеры товара через запятую !!!
+# • Остатки по товару (число) !!!
 # • ! Рейтинг
 # • ! Количество отзывов
 
@@ -31,27 +32,41 @@ def parse_product_card(content: str) -> dict[str, Any]:
     soup = BeautifulSoup(content, features="lxml")
     spec = {}
 
-    _spec = parse_rating_reviews(soup)
-    if _spec:
-        spec.update(_spec)
+    funcs = (
+        parse_image_urls,
+        parse_rating_reviews,
+        parse_seller_name,
+        parse_seller_link,
+        parse_article,
+        parse_title,
+        parse_price,
+    )
 
-    _spec = parse_article(soup)
-    if _spec:
-        spec.update(_spec)
-
-    _spec = parse_title(soup)
-    if _spec:
-        spec.update(_spec)
-
-    _spec = parse_price(soup)
-    if _spec:
-        spec.update(_spec)
-
-    _spec = parse_seller_name(soup)
-    if _spec:
-        spec.update(_spec)
+    for func in funcs:
+        res = func(soup)
+        if res:
+            spec.update(res)
 
     return spec
+
+
+def parse_image_urls(soup: BeautifulSoup) -> dict[str, list[str]] | None:
+    elements = soup.find_all("div", class_=PRODUCT_IMAGES_CLASS)
+
+    if not elements:
+        return None
+
+    urls = []
+    for element in elements:
+        img = element.find("img")
+        if not img:
+            continue
+
+        urls.append(img.get("src"))
+
+    unique_urls = list(dict.fromkeys(urls))
+
+    return {"image_urls": unique_urls}
 
 
 def parse_price(soup: BeautifulSoup) -> dict[str, Any] | None:
@@ -65,8 +80,20 @@ def parse_price(soup: BeautifulSoup) -> dict[str, Any] | None:
     return {"price": int(cleaned)}
 
 
+def parse_seller_link(soup: BeautifulSoup) -> dict[str, Any] | None:
+    tag = soup.find("a", class_=PRODUCT_SELLER_CLASS)
+    if not tag:
+        return None
+
+    sub = tag.get("href")
+    if not sub:
+        return None
+
+    return {"seller_link": WB_API_URL + str(sub)}
+
+
 def parse_seller_name(soup: BeautifulSoup) -> dict[str, Any] | None:
-    spec = soup.find("span", class_=PRODUCT_SELLER_CLASS)
+    spec = soup.find("span", class_=PRODUCT_SELLER_NAME_CLASS)
     if not spec:
         return None
 
@@ -74,11 +101,11 @@ def parse_seller_name(soup: BeautifulSoup) -> dict[str, Any] | None:
 
 
 def parse_article(soup: BeautifulSoup) -> dict[str, Any] | None:
-    spec = soup.find("span", class_=PRODUCT_ARTICLE_CLASS)
-    if not spec:
+    tag = soup.find("button", class_=PRODUCT_ARTICLE_CLASS)
+    if not tag:
         return None
 
-    return {"article": spec.text}
+    return {"article": tag.text}
 
 
 def parse_title(soup: BeautifulSoup) -> dict[str, Any] | None:

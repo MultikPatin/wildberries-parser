@@ -14,6 +14,8 @@ from src.constants import (
 
 from .driver import get_driver
 
+# TODO Add Exceptions
+
 
 class WildberriesWebDriver:
     def __init__(self) -> None:
@@ -77,4 +79,4 @@ class WildberriesWebDriver:
 
         page_detail = self._get_product_detail_content(PRODUCTS_DETAILS_CONTENT)
 
-        return {"page_content": page_content, "page_detail": page_detail}
+        return {"content": page_content, "detail": page_detail}
