@@ -12,6 +12,7 @@ from src.constants import (
     PRODUCT_REVIEWS_PATTERN,
     PRODUCT_SELLER_CLASS,
     PRODUCT_SELLER_NAME_CLASS,
+    PRODUCT_SIZES_CLASS,
     PRODUCT_TITLE_CLASS,
     WB_API_URL,
 )
@@ -23,7 +24,6 @@ from src.constants import (
 # • ! Название селлера
 # • ! Ссылка на селлера
 # • Размеры товара через запятую !!!
-# • Остатки по товару (число) !!!
 # • ! Рейтинг
 # • ! Количество отзывов
 
@@ -40,6 +40,7 @@ def parse_product_card(content: str) -> dict[str, Any]:
         parse_article,
         parse_title,
         parse_price,
+        parse_sizes,
     )
 
     for func in funcs:
@@ -48,6 +49,22 @@ def parse_product_card(content: str) -> dict[str, Any]:
             spec.update(res)
 
     return spec
+
+
+def parse_sizes(soup: BeautifulSoup) -> dict[str, Any] | None:
+    size_items = soup.find_all("li", class_=PRODUCT_SIZES_CLASS)
+    if not size_items:
+        return None
+
+    sizes = []
+    for item in size_items:
+        span = item.find("span")
+        if span:
+            size_text = span.get_text(strip=True)
+            if size_text:
+                sizes.append(size_text)
+
+    return {"sizes": sizes}
 
 
 def parse_image_urls(soup: BeautifulSoup) -> dict[str, list[str]] | None:

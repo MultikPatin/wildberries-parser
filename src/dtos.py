@@ -12,7 +12,6 @@ from typing import Any
 # • Название селлера
 # • Ссылка на селлера
 # • Размеры товара через запятую
-# • Остатки по товару (число)
 # • Рейтинг
 # • Количество отзывов
 
@@ -23,14 +22,11 @@ class Product:
     article: str
     title: str
     price: int
-
     description: str
     specification: dict[str, Any]
-
     image_urls: str
     seller_name: str
     seller_link: str
     sizes: list[str]
-    balance: int
     rating: float | None = None
     reviews_count: int | None = None
