@@ -17,16 +17,6 @@ from src.constants import (
     WB_API_URL,
 )
 
-# • ! Артикул
-# • ! Название
-# • ! Цена
-# • ! Ссылки на изображения через запятую
-# • ! Название селлера
-# • ! Ссылка на селлера
-# • Размеры товара через запятую !!!
-# • ! Рейтинг
-# • ! Количество отзывов
-
 
 def parse_product_card(content: str) -> dict[str, Any]:
     soup = BeautifulSoup(content, features="lxml")

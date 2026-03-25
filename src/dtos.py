@@ -1,22 +1,8 @@
 from dataclasses import dataclass
 from typing import Any
 
-# Список нужных данных:
-# • Ссылка на товар
-# • Артикул
-# • Название
-# • Цена
-# • Описание
-# • Ссылки на изображения через запятую
-# • Все характеристики с сохранением их структуры
-# • Название селлера
-# • Ссылка на селлера
-# • Размеры товара через запятую
-# • Рейтинг
-# • Количество отзывов
 
-
-@dataclass
+@dataclass(frozen=True)
 class Product:
     link: str
     article: str
@@ -30,3 +16,10 @@ class Product:
     sizes: list[str]
     rating: float | None = None
     reviews_count: int | None = None
+
+
+@dataclass(frozen=True)
+class Filters:
+    min_rating: float | None = None
+    max_price: int | None = None
+    country: str | None = None

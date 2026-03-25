@@ -42,3 +42,19 @@ PRODUCT_SPECIFICATION_CLASS = "table--tSF0X table--CGApj"
 
 PRODUCT_RATING_PATTERN = r"(\d+)(?:,(\d))?"
 PRODUCT_REVIEWS_PATTERN = r"(\d+)\s*\D*оценок|\d+\s*\D*отзывов"
+
+# ---------------------------------------------------
+
+COLUMNS_TITLES = [
+    ("article", "Артику"),
+    ("title", "Название товар"),
+    ("price", "Цен"),
+    ("sizes", "Размер"),
+    ("rating", "Рейтин"),
+    ("reviews_count", "Количество отзыво"),
+    ("description", "Описани"),
+    ("specification", "Параметр"),
+    ("image_urls", "Ссылки на изображени"),
+    ("seller_link", "Ссылка продавц"),
+    ("seller_name", "Имя Продавц"),
+]

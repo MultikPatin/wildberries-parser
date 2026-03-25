@@ -1,3 +1,5 @@
+import time
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as ec
@@ -69,6 +71,8 @@ class WildberriesWebDriver:
 
     def get_product_card_html(self, url: str) -> dict[str, str | None]:
         self._driver.get(url)
+
+        time.sleep(2)
 
         page_content = self._get_product_page_content(PRODUCTS_PAGE_CONTENT)
 
